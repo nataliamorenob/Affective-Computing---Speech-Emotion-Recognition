@@ -5,7 +5,7 @@ import librosa
 from tqdm import tqdm
 
 # Load metadata CSV
-metadata = pd.read_csv("dataset.csv")
+metadata = pd.read_csv("data.csv")
 
 # Parameters
 SR = 16000          # target sample rate
