@@ -12,6 +12,7 @@ neutral, calm, happy, sad, angry, fearful, disgust, surprised
     - Evaluation — Computes accuracy, precision, recall, F1, and confusion matrices.
 
 ## Project Structure
+```
 Affective-Computing---Speech-Emotion-Recognition/
 │
 ├── README.md                        # Project documentation
@@ -39,7 +40,7 @@ Affective-Computing---Speech-Emotion-Recognition/
     ├── utils.py                     # Data loading, scaling, training, early stopping
     ├── metrics.py                   # Metrics computation and confusion matrix plotting
     └── run.py                       # Main training and evaluation script
-
+```
 
 ## Virtual environment (Requirements)
 
@@ -57,13 +58,14 @@ Place it in:
 Affective-Computing---Speech-Emotion-Recognition/archive-5/
 ```
 Each actor should have a subfolder with .wav files, e.g.:
+```
 archive-5/
 ├── Actor_01/
 │   ├── 03-01-01-01-01-01-01.wav
 │   └── ...
 ├── Actor_02/
 │   └── ...
-
+```
 ## Running the project
 ```bash
 cd src
