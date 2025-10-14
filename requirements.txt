@@ -1,0 +1,9 @@
+# requirements.txt
+torch>=2.0
+torchaudio
+numpy
+pandas
+librosa>=0.10
+scikit-learn
+matplotlib
+tqdm

@@ -9,32 +9,43 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-def load_data(data_path="../Data", batch_size=32):
-    X = np.load(f"{data_path}/X_merged.npy")
-    y = np.load(f"{data_path}/y_merged.npy")
+def load_data(data_path="../Data", batch_size=32, test_size=0.2, random_state=42):
+    # Load preprocessed features:
+    X = np.load(f"{data_path}/X_merged_new.npy")
+    y = np.load(f"{data_path}/y_merged_new.npy")
 
-    # Normalize MFCCs
-    X_reshaped = X.reshape(X.shape[0], -1)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X_reshaped)
-    X_scaled = X_scaled.reshape(X.shape)
-
-    # Split
+    # Split data:
     X_train, X_test, y_train, y_test = train_test_split(
-        X_scaled, y, test_size=0.2, random_state=42, stratify=y
+        X, y, test_size=test_size, random_state=random_state, stratify=y
     )
 
-    # Convert to tensors
-    X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
+    # Fit scaler on TRAIN:
+    X_train_reshaped = X_train.reshape(X_train.shape[0], -1)
+    X_test_reshaped = X_test.reshape(X_test.shape[0], -1)
+
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train_reshaped)
+    X_test_scaled = scaler.transform(X_test_reshaped)
+
+    # Reshape back:
+    X_train_scaled = X_train_scaled.reshape(X_train.shape)
+    X_test_scaled = X_test_scaled.reshape(X_test.shape)
+
+    # Convert to tensors:
+    X_train_tensor = torch.tensor(X_train_scaled, dtype=torch.float32)
     y_train_tensor = torch.tensor(y_train, dtype=torch.long)
-    X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
+    X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
     y_test_tensor = torch.tensor(y_test, dtype=torch.long)
 
-    # DataLoaders
-    train_loader = DataLoader(TensorDataset(X_train_tensor, y_train_tensor),
-                              batch_size=batch_size, shuffle=True)
-    test_loader = DataLoader(TensorDataset(X_test_tensor, y_test_tensor),
-                             batch_size=batch_size)
+    # DataLoaders:
+    train_loader = DataLoader(
+        TensorDataset(X_train_tensor, y_train_tensor),
+        batch_size=batch_size, shuffle=True
+    )
+    test_loader = DataLoader(
+        TensorDataset(X_test_tensor, y_test_tensor),
+        batch_size=batch_size
+    )
 
     return train_loader, test_loader
 
