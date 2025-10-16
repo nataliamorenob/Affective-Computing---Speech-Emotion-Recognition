@@ -2,6 +2,7 @@ import os
 import librosa
 import numpy as np
 
+#Iniyans pre-processing ffor generating MFCCs from audio files in the dataset
 # FOLDER DIRECTORY 
 input_dir = r'/Users/nataliamorenoblasco/Desktop/AffectiveComputing_SpeechRecognition/Affective-Computing---Speech-Emotion-Recognition/archive-5'  
 

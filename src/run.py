@@ -32,8 +32,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 # Preprocessing (generation of MFCCs):
-raw_data_dir = "/Users/nataliamorenoblasco/Desktop/AffectiveComputing_SpeechRecognition/Affective-Computing---Speech-Emotion-Recognition/archive-5" # this is where your raw data is located (is what it downloads from Kaggle)
-processed_dir = "/Users/nataliamorenoblasco/Desktop/AffectiveComputing_SpeechRecognition/Affective-Computing---Speech-Emotion-Recognition/Data_preprocessing/preprocessed_mfccs"
+raw_data_dir = "./data" # this is where your raw data is located (is what it downloads from Kaggle)
+processed_dir = "./Data_preprocessing/preprocessed_mfccs"
 
 # checking if merged files exist, otherwise generate them:
 X_path = os.path.join(processed_dir, "X_merged_new.npy")

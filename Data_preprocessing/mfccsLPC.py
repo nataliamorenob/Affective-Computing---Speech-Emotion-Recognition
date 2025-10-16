@@ -2,6 +2,7 @@ import os
 import numpy as np
 import librosa
 
+#Natalias pre-processing for generating MFCC + LPC features from audio files in the dataset
 # This code was extracted from: https://www.kaggle.com/code/kayodeowoseni/ser-cnn-lpc-mfcc
 # --- MFCC + LPC extraction for a single file ---
 def process_file(input_path, n_mfcc=40, lpc_order=16, frame_length=512, hop_length=256, max_len=216, sr=16000):
