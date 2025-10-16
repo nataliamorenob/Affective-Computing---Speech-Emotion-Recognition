@@ -1,2 +1,7 @@
 .venv/
-data/
+archive-5/
+Data_preprocessing/preprocees_mfccsLPC/
+Data_preprocessing/preprocessed_mfccs/
+results/
+__pycache__/
+Data/
