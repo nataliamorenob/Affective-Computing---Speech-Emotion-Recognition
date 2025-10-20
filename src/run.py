@@ -9,6 +9,7 @@ import os
 import pandas as pd
 import numpy as np
 from preprocessing.preprocessing import generate_features, merge_features
+from metrics import compute_metrics, classification_summary, plot_confusion_matrix
 
 
 # Create results directories if not exist:
@@ -76,25 +77,14 @@ train_losses, test_accs = train_model(
     patience=5, min_delta=0.001
 )
 
-# Final evaluation (optional but recommended):
-final_acc = evaluate_model(model, test_loader, device)
+# Final evaluation and predictions:
+final_acc, y_true, y_pred = evaluate_model(model, test_loader, device)
 print(f"Final Test Accuracy: {final_acc:.3f}")
 
-# Save trained model:
-model_path = f"../results/saved_models/{model_name}_model.pth"
-torch.save(model.state_dict(), model_path)
-print(f"Training complete. Model saved as {model_name}_model.pth")
-
-from metrics import get_predictions, compute_metrics, plot_confusion_matrix, classification_summary
-
-# After training:
-y_true, y_pred = get_predictions(model, test_loader, device)
-
-
+# Save predictions and analyze:
 unique_preds, counts = np.unique(y_pred, return_counts=True)
 print("Predicted labels:", unique_preds)
 print("Counts:", counts)
-
 
 # Compute metrics:
 results = compute_metrics(y_true, y_pred)
@@ -112,7 +102,6 @@ for k, v in results.items():
 metrics_path = "../results/metrics/model_metrics.csv"
 pd.DataFrame([results]).to_csv(metrics_path, mode='a', header=not os.path.exists(metrics_path), index=False)
 print(f"Metrics saved to: {metrics_path}")
-
 
 # Classification report (per emotion):
 emotion_labels = ['neutral', 'calm', 'happy', 'sad', 'angry', 'fearful', 'disgust', 'surprised']

@@ -106,7 +106,7 @@ def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=No
         train_acc = correct / total
 
         # Evaluate on test set
-        test_acc = evaluate_model(model, test_loader, device)
+        test_acc, _, _ = evaluate_model(model, test_loader, device)  # Extract only accuracy
 
         train_losses.append(train_loss)
         test_accuracies.append(test_acc)
@@ -123,7 +123,7 @@ def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=No
             patience_counter += 1
 
         if patience_counter >= patience:
-            print(f"\n⏹️ Early stopping triggered at epoch {epoch}. Best epoch was {best_epoch} with Test Acc: {best_acc:.3f}")
+            print(f"Early stopping triggered at epoch {epoch}. Best epoch was {best_epoch} with Test Acc: {best_acc:.3f}")
             model.load_state_dict(best_model_state)  # restore best model
             break
 
@@ -131,13 +131,34 @@ def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=No
 
 
 def evaluate_model(model, data_loader, device):
+    """
+    Evaluate the model on a dataset and return accuracy, true labels, and predictions.
+
+    Args:
+        model: Trained PyTorch model.
+        data_loader: DataLoader for the dataset to evaluate.
+        device: Device to run the evaluation on (CPU or GPU).
+
+    Returns:
+        accuracy (float): Accuracy of the model on the dataset.
+        y_true (np.array): True labels.
+        y_pred (np.array): Predicted labels.
+    """
     model.eval()
     correct, total = 0, 0
+    y_true, y_pred = [], []
+
     with torch.no_grad():
         for X_batch, y_batch in data_loader:
             X_batch, y_batch = X_batch.to(device), y_batch.to(device)
             outputs = model(X_batch)
             _, predicted = torch.max(outputs, 1)
+
             total += y_batch.size(0)
             correct += (predicted == y_batch).sum().item()
-    return correct / total
+
+            y_true.extend(y_batch.cpu().numpy())
+            y_pred.extend(predicted.cpu().numpy())
+
+    accuracy = correct / total
+    return accuracy, np.array(y_true), np.array(y_pred)
