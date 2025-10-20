@@ -75,7 +75,8 @@ python run.py
 ## Configurable parameters
 In run.py you can find at the top a Config section with all the parameters which can be modified. Example:
 ```bash
-model_name = "cnn"   # Options: "dnn", "lstm", "cnn", "crnn"
+model_name = "cnn" # Options: "dnn", "lstm", "cnn", "crnn"
+feature_extraction = "mfcc" # Options: "mfcc" or "mfcc_lpc"
 ```
 
 ## Contributors

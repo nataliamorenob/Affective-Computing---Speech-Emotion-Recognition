@@ -29,6 +29,18 @@ def process_file(input_path, n_mfcc=40, lpc_order=16, frame_length=512, hop_leng
     combined = np.vstack([mfcc, lpc])  # shape: (56, 216)
     return combined
 
+# MFCC extraction for a single file:
+def process_file_mfcc(input_path, n_mfcc=40, max_len=216, sr=16000):
+    # Load and normalize
+    y, _ = librosa.load(input_path, sr=sr)
+    y = librosa.util.normalize(y)
+
+    # --- MFCC ---
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_mfcc)
+    mfcc = librosa.util.fix_length(mfcc, size=max_len, axis=1)
+
+    return mfcc
+
 # --- PROCESS ALL ACTORS ---
 input_dir = "/Users/nataliamorenoblasco/Desktop/AffectiveComputing_SpeechRecognition/Affective-Computing---Speech-Emotion-Recognition/archive-5"
 output_dir = "/Users/nataliamorenoblasco/Desktop/AffectiveComputing_SpeechRecognition/Affective-Computing---Speech-Emotion-Recognition/Data_preprocessing/preprocees_mfccsLPC"

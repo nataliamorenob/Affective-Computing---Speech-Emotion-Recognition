@@ -29,7 +29,11 @@ def process_file(input_path, n_mfcc=40, lpc_order=16, frame_length=512, hop_leng
     return combined
 
 
-def generate_features(input_dir, output_dir):
+def process_file_mfcc(input_path):
+    return process_file(input_path, n_mfcc=40, lpc_order=16, frame_length=512, hop_length=256, max_len=216, sr=16000)
+
+
+def generate_features(input_dir, output_dir, feature_extraction="mfcc_lpc"):
     os.makedirs(output_dir, exist_ok=True)
     actors = [f for f in os.listdir(input_dir) if os.path.isdir(os.path.join(input_dir, f))]
 
@@ -41,14 +45,21 @@ def generate_features(input_dir, output_dir):
         for file in [f for f in os.listdir(actor_input) if f.endswith(".wav")]:
             input_path = os.path.join(actor_input, file)
             output_path = os.path.join(actor_output, file.replace(".wav", ".npy"))
-            mfcc_lpc = process_file(input_path)
-            np.save(output_path, mfcc_lpc)
+
+            if feature_extraction == "mfcc":
+                features = process_file_mfcc(input_path)
+            elif feature_extraction == "mfcc_lpc":
+                features = process_file(input_path)
+            else:
+                raise ValueError(f"Unknown feature extraction method: {feature_extraction}")
+
+            np.save(output_path, features)
             print(f"Saved {output_path}")
 
-    print("Finished generating MFCC + LPC features.")
+    print(f"Finished generating {feature_extraction.upper()} features.")
 
 
-def merge_features(data_dir, output_path=""):
+def merge_features(data_dir, output_path="", feature_extraction="mfcc_lpc"):
     emotion_map = {
         '01': 0, '02': 1, '03': 2, '04': 3,
         '05': 4, '06': 5, '07': 6, '08': 7,
@@ -73,6 +84,6 @@ def merge_features(data_dir, output_path=""):
     X, y = np.array(X_list), np.array(y_list)
     print(f"Merged dataset: X={X.shape}, y={y.shape}")
 
-    np.save(os.path.join(output_path, "X_merged_new.npy"), X)
-    np.save(os.path.join(output_path, "y_merged_new.npy"), y)
-    print(f"Saved to {output_path}")
+    np.save(os.path.join(output_path, f"X_merged_{feature_extraction}.npy"), X)
+    np.save(os.path.join(output_path, f"y_merged_{feature_extraction}.npy"), y)
+    print(f"Saved {feature_extraction.upper()} dataset to {output_path}")

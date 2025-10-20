@@ -21,8 +21,9 @@ os.makedirs("../Data_preprocessing/preprocessed_mfccs", exist_ok=True)
 
 # Config (this is what you can change):
 model_name = "crnn" # options: "dnn" or "lstm"
+feature_extraction = "mfcc" # options: "mfcc" or "mfcc_lpc"
 epochs = 50
-lr = 0.001
+lr = 0.0001
 batch_size = 32
 n_mfcc = 56 # 13 or 39 depending on your preprocessing
 time_steps = 216 # fixed number of frames
@@ -36,17 +37,17 @@ print(f"Using device: {device}")
 raw_data_dir = "/Users/nataliamorenoblasco/Desktop/AffectiveComputing_SpeechRecognition/Affective-Computing---Speech-Emotion-Recognition/archive-5" # this is where your raw data is located (is what it downloads from Kaggle)
 processed_dir = "/Users/nataliamorenoblasco/Desktop/AffectiveComputing_SpeechRecognition/Affective-Computing---Speech-Emotion-Recognition/Data_preprocessing/preprocessed_mfccs"
 
-# checking if merged files exist, otherwise generate them:
-X_path = os.path.join(processed_dir, "X_merged_new.npy")
-y_path = os.path.join(processed_dir, "y_merged_new.npy")
+# checking if merged files exist and match the selected feature extraction method:
+X_path = os.path.join(processed_dir, f"X_merged_{feature_extraction}.npy")
+y_path = os.path.join(processed_dir, f"y_merged_{feature_extraction}.npy")
 
 if not (os.path.exists(X_path) and os.path.exists(y_path)):
-    print("Generating MFCC + LPC features...")
-    generate_features(raw_data_dir, processed_dir)
+    print(f"Generating {feature_extraction.upper()} features...")
+    generate_features(raw_data_dir, processed_dir, feature_extraction)
     print("Merging feature files...")
-    merge_features(processed_dir, processed_dir)
+    merge_features(processed_dir, processed_dir, feature_extraction)
 else:
-    print("Found existing merged dataset. Skipping feature generation.")
+    print(f"Found existing {feature_extraction.upper()} dataset. Skipping feature generation.")
 
 # Data loading:
 train_loader, test_loader = load_data(data_path=processed_dir, batch_size=batch_size)
