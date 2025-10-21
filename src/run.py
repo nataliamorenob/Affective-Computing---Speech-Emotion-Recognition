@@ -20,10 +20,9 @@ os.makedirs("../Data_preprocessing/preprocessed_mfccs", exist_ok=True)
 
 
 # Config (this is what you can change):
-model_name = "lstm" # options: "dnn", "lstm", "crnn", "cnn"
-feature_extraction = "mfcc" # options: "mfcc" or "mfcc_lpc"
+model_name = "crnn" # options: "dnn" or "lstm"
 epochs = 50
-lr = 0.0001
+lr = 0.001
 batch_size = 32
 n_mfcc = 56 # 13 or 39 depending on your preprocessing
 time_steps = 216 # fixed number of frames
