@@ -1,17 +1,20 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from tqdm import tqdm
 
 import numpy as np
-import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-def load_data(data_path="../Data", batch_size=32, test_size=0.2, random_state=42):
-    # Load preprocessed features:
-    X = np.load(f"{data_path}/X_merged_new.npy")
+
+def load_data(data_path="../Data", batch_size=32, test_size=0.3, random_state=42):
+    """Load preprocessed data from npy files and return DataLoaders.
+
+    Expects files named `x_merged_new.npy` and `y_merged_new.npy` in `data_path`.
+    """
+    # filenames produced by preprocessing are lowercase
+    X = np.load(f"{data_path}/x_merged_new.npy")
     y = np.load(f"{data_path}/y_merged_new.npy")
 
     # Split data:
@@ -50,39 +53,38 @@ def load_data(data_path="../Data", batch_size=32, test_size=0.2, random_state=42
     return train_loader, test_loader
 
 
-
-
-def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=None,
-                patience=10, min_delta=0.001):
-    """
-    Train the model with early stopping based on test accuracy.
-
-    Args:
-        model: PyTorch model to train.
-        train_loader: DataLoader for training data.
-        test_loader: DataLoader for validation/test data.
-        epochs (int): Max number of epochs.
-        lr (float): Learning rate.
-        device (torch.device): 'cuda' or 'cpu'.
-        patience (int): Number of epochs to wait for improvement before stopping.
-        min_delta (float): Minimum change in metric to be considered an improvement.
+def train_model(model, train_loader, test_loader,
+                epochs=50, lr=0.001, device=None,
+                patience=10, min_delta=0.001,
+                weight_decay=0.0, label_smoothing=0.0):
+    """Train the model with optional weight decay and label smoothing.
 
     Returns:
-        train_losses (list): Training loss per epoch.
-        test_accuracies (list): Validation accuracy per epoch.
+        train_losses, test_accuracies, best_epoch, stopped_early
     """
     if device is None:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
 
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    # Loss: support optional label smoothing if available in this PyTorch version
+    try:
+        criterion = nn.CrossEntropyLoss(label_smoothing=label_smoothing) if label_smoothing and label_smoothing > 0 else nn.CrossEntropyLoss()
+    except TypeError:
+        # Older PyTorch versions may not support label_smoothing kwarg
+        if label_smoothing and label_smoothing > 0:
+            print("Warning: label_smoothing requested but not supported by this PyTorch version. Ignoring.")
+        criterion = nn.CrossEntropyLoss()
+
+    # Optimizer with optional weight decay (L2)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
 
     train_losses, test_accuracies = [], []
 
     best_acc = 0.0
     best_epoch = 0
     patience_counter = 0
+    stopped_early = False
+    best_model_state = None
 
     for epoch in range(1, epochs + 1):
         model.train()
@@ -102,8 +104,8 @@ def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=No
             total += y_batch.size(0)
             correct += (predicted == y_batch).sum().item()
 
-        train_loss = running_loss / total
-        train_acc = correct / total
+        train_loss = running_loss / total if total > 0 else 0.0
+        train_acc = correct / total if total > 0 else 0.0
 
         # Evaluate on test set
         test_acc = evaluate_model(model, test_loader, device)
@@ -123,14 +125,24 @@ def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=No
             patience_counter += 1
 
         if patience_counter >= patience:
-            print(f"\n⏹️ Early stopping triggered at epoch {epoch}. Best epoch was {best_epoch} with Test Acc: {best_acc:.3f}")
-            model.load_state_dict(best_model_state)  # restore best model
+            print(f"\nEarly stopping triggered at epoch {epoch}. Best epoch was {best_epoch} with Test Acc: {best_acc:.3f}")
+            if best_model_state is not None:
+                model.load_state_dict(best_model_state)  # restore best model
+            stopped_early = True
             break
 
-    return train_losses, test_accuracies
+    # Restore best weights if early stopping wasn’t triggered but best found
+    if not stopped_early and best_model_state is not None:
+        model.load_state_dict(best_model_state)
+
+    return train_losses, test_accuracies, best_epoch, stopped_early
 
 
 def evaluate_model(model, data_loader, device):
+    """Evaluate the model on a dataset and return accuracy (float).
+
+    This function returns only accuracy to match existing callers in `run.py`.
+    """
     model.eval()
     correct, total = 0, 0
     with torch.no_grad():
@@ -140,4 +152,4 @@ def evaluate_model(model, data_loader, device):
             _, predicted = torch.max(outputs, 1)
             total += y_batch.size(0)
             correct += (predicted == y_batch).sum().item()
-    return correct / total
+    return correct / total if total > 0 else 0.0
