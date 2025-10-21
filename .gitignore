@@ -1,7 +1,7 @@
 .venv/
-archive-5/
-Data_preprocessing/preprocees_mfccsLPC/
-Data_preprocessing/preprocessed_mfccs/
 results/
 __pycache__/
-Data/
+data/
+src/logs/
+src/mfcc_lpc_data/
+dataset.csv
