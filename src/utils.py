@@ -53,7 +53,7 @@ def load_data(data_path="../Data", batch_size=32, test_size=0.2, random_state=42
 
 
 def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=None,
-                patience=10, min_delta=0.001):
+                patience=10, min_delta=0.001, weight_decay=0.0, label_smoothing=0.0):
     """
     Train the model with early stopping based on test accuracy.
 
@@ -66,6 +66,8 @@ def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=No
         device (torch.device): 'cuda' or 'cpu'.
         patience (int): Number of epochs to wait for improvement before stopping.
         min_delta (float): Minimum change in metric to be considered an improvement.
+        weight_decay (float): L2 regularization strength (default: 0.0).
+        label_smoothing (float): Label smoothing factor (default: 0.0).
 
     Returns:
         train_losses (list): Training loss per epoch.
@@ -75,8 +77,8 @@ def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=No
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
 
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    criterion = nn.CrossEntropyLoss(label_smoothing=label_smoothing)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
 
     train_losses, test_accuracies = [], []
 

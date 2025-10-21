@@ -20,7 +20,7 @@ os.makedirs("../Data_preprocessing/preprocessed_mfccs", exist_ok=True)
 
 
 # Config (this is what you can change):
-model_name = "crnn" # options: "dnn" or "lstm"
+model_name = "lstm" # options: "dnn", "lstm", "crnn", "cnn"
 feature_extraction = "mfcc" # options: "mfcc" or "mfcc_lpc"
 epochs = 50
 lr = 0.0001
@@ -28,6 +28,11 @@ batch_size = 32
 n_mfcc = 56 # 13 or 39 depending on your preprocessing
 time_steps = 216 # fixed number of frames
 num_classes = 8
+
+# Regularization parameters (increased to combat overfitting):
+weight_decay = 0.05  # L2 regularization strength (0.0 = no regularization) - INCREASED
+label_smoothing = 0.15  # Label smoothing factor (0.0 = no smoothing, 0.1 = 10% smoothing) - INCREASED
+dropout_rate = 0.6  # Dropout rate for models (higher = more regularization) - INCREASED
 
 # Device setup:
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -58,7 +63,7 @@ if model_name.lower() == "dnn":
 elif model_name.lower() == "lstm":
     model = LSTMNet(n_mfcc=n_mfcc, time_steps=time_steps, num_classes=num_classes)
 elif model_name.lower() == "crnn":
-    model = CRNN_Attention(n_mfcc=n_mfcc, time_steps=time_steps, num_classes=num_classes)
+    model = CRNN_Attention(n_mfcc=n_mfcc, time_steps=time_steps, num_classes=num_classes, dropout_rate=dropout_rate)
 elif model_name.lower() == "cnn":
     model = CNNModel(
         n_features=n_mfcc,      # or 56 if you’re using MFCC+LPC
@@ -75,7 +80,9 @@ print(f"Training model: {model_name.upper()}\n")
 train_losses, test_accs = train_model(
     model, train_loader, test_loader,
     epochs=epochs, lr=lr, device=device,
-    patience=5, min_delta=0.001
+    patience=5, min_delta=0.001,
+    weight_decay=weight_decay,
+    label_smoothing=label_smoothing
 )
 
 # Final evaluation and predictions:

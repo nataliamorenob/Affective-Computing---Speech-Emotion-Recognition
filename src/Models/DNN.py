@@ -3,16 +3,16 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class sDNN(nn.Module):
-    def __init__(self):
+    def __init__(self, input_dim=13*128, num_classes=8, dropout_rate=0.4):
         super(sDNN, self).__init__()
         self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(13 * 128, 512)
-        self.drop1 = nn.Dropout(0.4)
+        self.fc1 = nn.Linear(input_dim, 512)
+        self.drop1 = nn.Dropout(dropout_rate)
         self.fc2 = nn.Linear(512, 256)
-        self.drop2 = nn.Dropout(0.3)
+        self.drop2 = nn.Dropout(dropout_rate * 0.75)  # slightly less dropout
         self.fc3 = nn.Linear(256, 128)
-        self.drop3 = nn.Dropout(0.2)
-        self.fc4 = nn.Linear(128, 8)  # 8 emotion classes (0–7)
+        self.drop3 = nn.Dropout(dropout_rate * 0.5)  # even less dropout
+        self.fc4 = nn.Linear(128, num_classes)
 
     def forward(self, x):
         x = self.flatten(x)
