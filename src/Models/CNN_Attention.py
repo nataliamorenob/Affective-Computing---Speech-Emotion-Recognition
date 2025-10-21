@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class CRNN_Attention(nn.Module):
-    def __init__(self, n_mfcc=56, time_steps=216, num_classes=8, cnn_filters=64, lstm_hidden=128):
+    def __init__(self, n_mfcc=56, time_steps=216, num_classes=8, cnn_filters=64, lstm_hidden=128, dropout_rate=0.5):
         super(CRNN_Attention, self).__init__()
 
         # CNN feature extractor (with stronger pooling)
@@ -12,6 +12,10 @@ class CRNN_Attention(nn.Module):
         self.conv2 = nn.Conv2d(32, cnn_filters, kernel_size=3, padding=1)
         self.bn2 = nn.BatchNorm2d(cnn_filters)
         self.pool = nn.MaxPool2d((2, 4))   # ↓ both freq and time dimensions
+        
+        # Initialize dropout layers BEFORE using them
+        self.dropout = nn.Dropout(dropout_rate)
+        self.dropout_cnn = nn.Dropout(dropout_rate * 0.5)  # Lower dropout for CNN layers
 
         # Compute reduced feature dimension dynamically
         dummy = torch.zeros(1, 1, n_mfcc, time_steps)
@@ -30,11 +34,12 @@ class CRNN_Attention(nn.Module):
         )
         self.attention = nn.Linear(lstm_hidden * 2, 1)
         self.fc = nn.Linear(lstm_hidden * 2, num_classes)
-        self.dropout = nn.Dropout(0.4)
 
     def _forward_cnn(self, x):
         x = F.relu(self.bn1(self.conv1(x)))
+        x = self.dropout_cnn(x)
         x = self.pool(F.relu(self.bn2(self.conv2(x))))
+        x = self.dropout_cnn(x)
         return x
 
     def forward(self, x):
