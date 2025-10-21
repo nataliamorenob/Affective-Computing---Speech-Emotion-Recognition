@@ -21,6 +21,7 @@ os.makedirs("../Data_preprocessing/preprocessed_mfccs", exist_ok=True)
 
 # Config (this is what you can change):
 model_name = "crnn" # options: "dnn" or "lstm"
+feature_extraction = "mfcc" # options: "mfcc" or "mfcc_lpc"
 epochs = 50
 lr = 0.001
 batch_size = 32
