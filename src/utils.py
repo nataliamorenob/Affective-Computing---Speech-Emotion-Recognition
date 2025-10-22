@@ -53,7 +53,8 @@ def load_data(data_path="../Data", batch_size=32, test_size=0.2, random_state=42
 
 
 def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=None,
-                patience=10, min_delta=0.001, weight_decay=0.0, label_smoothing=0.0):
+                patience=10, min_delta=0.001, weight_decay=0.0, label_smoothing=0.0,
+                overfitting_threshold=0.15):
     """
     Train the model with early stopping based on test accuracy.
 
@@ -68,6 +69,7 @@ def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=No
         min_delta (float): Minimum change in metric to be considered an improvement.
         weight_decay (float): L2 regularization strength (default: 0.0).
         label_smoothing (float): Label smoothing factor (default: 0.0).
+        overfitting_threshold (float): Max allowed train-test gap before stopping (default: 0.15).
 
     Returns:
         train_losses (list): Training loss per epoch.
@@ -79,12 +81,18 @@ def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=No
 
     criterion = nn.CrossEntropyLoss(label_smoothing=label_smoothing)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+    
+    # Learning rate scheduler: reduce LR when validation accuracy plateaus
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, mode='max', factor=0.5, patience=2, verbose=True
+    )
 
     train_losses, test_accuracies = [], []
 
     best_acc = 0.0
     best_epoch = 0
     patience_counter = 0
+    best_model_state = None  # Initialize to None
 
     for epoch in range(1, epochs + 1):
         model.train()
@@ -113,9 +121,23 @@ def train_model(model, train_loader, test_loader, epochs=50, lr=0.001, device=No
         train_losses.append(train_loss)
         test_accuracies.append(test_acc)
 
-        print(f"Epoch {epoch:02d} | Loss: {train_loss:.4f} | Train Acc: {train_acc:.3f} | Test Acc: {test_acc:.3f}")
+        # Calculate overfitting gap
+        acc_gap = train_acc - test_acc
+        
+        print(f"Epoch {epoch:02d} | Loss: {train_loss:.4f} | Train Acc: {train_acc:.3f} | Test Acc: {test_acc:.3f} | Gap: {acc_gap:.3f}")
 
-        # Early Stopping Logic:
+        # Step the learning rate scheduler based on test accuracy
+        scheduler.step(test_acc)
+
+        # Overfitting detection: Stop if gap is too large
+        if acc_gap > overfitting_threshold:
+            print(f"⚠️  Overfitting detected! Train-Test gap: {acc_gap:.3f} (>{overfitting_threshold:.2f})")
+            print(f"Stopping early to prevent overfitting. Best epoch was {best_epoch} with Test Acc: {best_acc:.3f}")
+            if best_model_state is not None:
+                model.load_state_dict(best_model_state)  # restore best model
+            break
+
+        # Early Stopping Logic (based on test accuracy improvement):
         if test_acc > best_acc + min_delta:
             best_acc = test_acc
             best_epoch = epoch

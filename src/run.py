@@ -20,7 +20,7 @@ os.makedirs("../Data_preprocessing/preprocessed_mfccs", exist_ok=True)
 
 
 # Config (this is what you can change):
-model_name = "crnn" # options: "dnn" or "lstm"
+model_name = "dnn" # options: "dnn", "lstm", "cnn", "crnn"
 feature_extraction = "mfcc" # options: "mfcc" or "mfcc_lpc"
 epochs = 50
 lr = 0.001
@@ -29,10 +29,23 @@ n_mfcc = 56 # 13 or 39 depending on your preprocessing
 time_steps = 216 # fixed number of frames
 num_classes = 8
 
-# Regularization parameters (increased to combat overfitting):
-weight_decay = 0.05  # L2 regularization strength (0.0 = no regularization) - INCREASED
-label_smoothing = 0.15  # Label smoothing factor (0.0 = no smoothing, 0.1 = 10% smoothing) - INCREASED
-dropout_rate = 0.6  # Dropout rate for models (higher = more regularization) - INCREASED
+# Model-specific regularization (CNN tends to overfit more):
+if model_name.lower() == "cnn":
+    # Aggressive regularization for CNN
+    weight_decay = 0.05
+    label_smoothing = 0.15
+    dropout_rate = 0.5
+    early_stop_patience = 2
+    early_stop_min_delta = 0.01
+    overfitting_gap_threshold = 0.15  # Stop if train-test gap > 15%
+else:
+    # Moderate regularization for other models
+    weight_decay = 0.02
+    label_smoothing = 0.1
+    dropout_rate = 0.4
+    early_stop_patience = 3
+    early_stop_min_delta = 0.005
+    overfitting_gap_threshold = 0.20  # More lenient for CRNN, LSTM, DNN
 
 # Device setup:
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -80,9 +93,11 @@ print(f"Training model: {model_name.upper()}\n")
 train_losses, test_accs = train_model(
     model, train_loader, test_loader,
     epochs=epochs, lr=lr, device=device,
-    patience=5, min_delta=0.001,
+    patience=early_stop_patience,
+    min_delta=early_stop_min_delta,
     weight_decay=weight_decay,
-    label_smoothing=label_smoothing
+    label_smoothing=label_smoothing,
+    overfitting_threshold=overfitting_gap_threshold
 )
 
 # Final evaluation and predictions:
