@@ -1,0 +1,2 @@
+accuracy,precision,recall,f1,model,feature_extraction,final_accuracy,epochs,learning_rate,batch_size,weight_decay,label_smoothing,dropout_rate,best_epoch,early_stopping,timestamp
+0.2824074074074074,0.14852121046460742,0.2824074074074074,0.172992286548512,crnn,mfcc_lpc,0.2824074074074074,50,0.001,32,0.05,0.15,0.6,18,True,2025-10-21_19-04-48

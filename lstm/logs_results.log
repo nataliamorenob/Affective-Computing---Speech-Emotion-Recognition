@@ -1,0 +1,66 @@
+2025-10-21 18:59:36,270 | INFO | Starting training pipeline...
+2025-10-21 18:59:36,270 | INFO | Logs and results will be saved in: .\src\logs\2025-10-21_18-59-36
+
+2025-10-21 18:59:36,270 | INFO | Required directories verified or created.
+
+2025-10-21 18:59:36,270 | INFO | Model Configuration:
+2025-10-21 18:59:36,270 | INFO | Model: LSTM
+2025-10-21 18:59:36,270 | INFO | Epochs: 50
+2025-10-21 18:59:36,270 | INFO | Learning rate: 0.001
+2025-10-21 18:59:36,270 | INFO | Batch size: 32
+2025-10-21 18:59:36,270 | INFO | n_mfcc: 56, time_steps: 216
+2025-10-21 18:59:36,270 | INFO | Feature extraction: mfcc_lpc
+2025-10-21 18:59:36,270 | INFO | Device: cpu
+
+2025-10-21 18:59:36,270 | INFO | Generating MFCC + LPC features...
+2025-10-21 19:00:09,065 | INFO | Merging feature files...
+2025-10-21 19:00:29,338 | INFO | Feature generation and merging completed.
+
+2025-10-21 19:00:29,338 | INFO | Loading data...
+2025-10-21 19:00:29,722 | INFO | Data loaded successfully.
+
+2025-10-21 19:00:29,722 | INFO | Training model: LSTM
+
+2025-10-21 19:00:29,722 | INFO | Starting training...
+2025-10-21 19:04:23,791 | INFO | Per-epoch results:
+2025-10-21 19:04:23,791 | INFO | Epoch 01 | Train Loss: 2.0776 | Test Acc: 0.132
+2025-10-21 19:04:23,791 | INFO | Epoch 02 | Train Loss: 2.0753 | Test Acc: 0.132
+2025-10-21 19:04:23,791 | INFO | Epoch 03 | Train Loss: 2.0750 | Test Acc: 0.132
+2025-10-21 19:04:23,791 | INFO | Epoch 04 | Train Loss: 2.0746 | Test Acc: 0.132
+2025-10-21 19:04:23,791 | INFO | Epoch 05 | Train Loss: 2.0740 | Test Acc: 0.132
+2025-10-21 19:04:23,791 | INFO | Epoch 06 | Train Loss: 2.0734 | Test Acc: 0.132
+2025-10-21 19:04:23,791 | INFO | Early stopping triggered at epoch 1.
+2025-10-21 19:04:23,791 | INFO | Training complete.
+
+2025-10-21 19:04:24,229 | INFO | Final Test Accuracy: 0.132
+
+2025-10-21 19:04:24,695 | INFO | Model saved to: .\src\logs\2025-10-21_18-59-36\lstm_model.pth
+
+2025-10-21 19:04:24,695 | INFO | Prediction Summary:
+2025-10-21 19:04:24,695 | INFO |   Label 1: 432 samples
+2025-10-21 19:04:24,716 | INFO | 
+Model Performance Metrics:
+2025-10-21 19:04:24,716 | INFO | accuracy       : 0.132
+2025-10-21 19:04:24,716 | INFO | precision      : 0.017
+2025-10-21 19:04:24,717 | INFO | recall         : 0.132
+2025-10-21 19:04:24,717 | INFO | f1             : 0.031
+2025-10-21 19:04:24,717 | INFO | model          : lstm
+2025-10-21 19:04:24,718 | INFO | feature_extraction: mfcc_lpc
+2025-10-21 19:04:24,718 | INFO | final_accuracy : 0.132
+2025-10-21 19:04:24,718 | INFO | epochs         : 50.000
+2025-10-21 19:04:24,718 | INFO | learning_rate  : 0.001
+2025-10-21 19:04:24,718 | INFO | batch_size     : 32.000
+2025-10-21 19:04:24,718 | INFO | weight_decay   : 0.050
+2025-10-21 19:04:24,719 | INFO | label_smoothing: 0.150
+2025-10-21 19:04:24,719 | INFO | dropout_rate   : 0.600
+2025-10-21 19:04:24,719 | INFO | best_epoch     : 1.000
+2025-10-21 19:04:24,719 | INFO | early_stopping : 1.000
+2025-10-21 19:04:24,720 | INFO | timestamp      : 2025-10-21_18-59-36
+2025-10-21 19:04:24,734 | INFO | 
+Metrics saved to: .\src\logs\2025-10-21_18-59-36\model_metrics.csv
+
+2025-10-21 19:04:24,734 | INFO | Generating classification report and confusion matrix...
+2025-10-21 19:04:35,211 | INFO | Confusion matrix saved to: .\src\logs\2025-10-21_18-59-36\lstm_confusion_matrix.png
+
+2025-10-21 19:04:35,211 | INFO | All tasks completed successfully!
+2025-10-21 19:04:35,211 | INFO | ================================================================================

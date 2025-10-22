@@ -1,0 +1,85 @@
+2025-10-21 19:04:48,541 | INFO | Starting training pipeline...
+2025-10-21 19:04:48,541 | INFO | Logs and results will be saved in: .\src\logs\2025-10-21_19-04-48
+
+2025-10-21 19:04:48,541 | INFO | Required directories verified or created.
+
+2025-10-21 19:04:48,541 | INFO | Model Configuration:
+2025-10-21 19:04:48,541 | INFO | Model: CRNN
+2025-10-21 19:04:48,541 | INFO | Epochs: 50
+2025-10-21 19:04:48,541 | INFO | Learning rate: 0.001
+2025-10-21 19:04:48,541 | INFO | Batch size: 32
+2025-10-21 19:04:48,541 | INFO | n_mfcc: 56, time_steps: 216
+2025-10-21 19:04:48,541 | INFO | Feature extraction: mfcc_lpc
+2025-10-21 19:04:48,541 | INFO | Device: cpu
+
+2025-10-21 19:04:48,541 | INFO | Found existing merged dataset. Skipping feature generation.
+
+2025-10-21 19:04:48,541 | INFO | Loading data...
+2025-10-21 19:04:48,835 | INFO | Data loaded successfully.
+
+2025-10-21 19:04:48,876 | INFO | Training model: CRNN
+
+2025-10-21 19:04:48,876 | INFO | Starting training...
+2025-10-21 19:21:34,038 | INFO | Per-epoch results:
+2025-10-21 19:21:34,038 | INFO | Epoch 01 | Train Loss: 2.0734 | Test Acc: 0.181
+2025-10-21 19:21:34,038 | INFO | Epoch 02 | Train Loss: 2.0496 | Test Acc: 0.181
+2025-10-21 19:21:34,038 | INFO | Epoch 03 | Train Loss: 2.0070 | Test Acc: 0.215
+2025-10-21 19:21:34,053 | INFO | Epoch 04 | Train Loss: 1.9750 | Test Acc: 0.269
+2025-10-21 19:21:34,053 | INFO | Epoch 05 | Train Loss: 1.9537 | Test Acc: 0.271
+2025-10-21 19:21:34,053 | INFO | Epoch 06 | Train Loss: 1.9639 | Test Acc: 0.231
+2025-10-21 19:21:34,053 | INFO | Epoch 07 | Train Loss: 1.9532 | Test Acc: 0.257
+2025-10-21 19:21:34,055 | INFO | Epoch 08 | Train Loss: 1.9425 | Test Acc: 0.294
+2025-10-21 19:21:34,055 | INFO | Epoch 09 | Train Loss: 1.9288 | Test Acc: 0.294
+2025-10-21 19:21:34,056 | INFO | Epoch 10 | Train Loss: 1.9258 | Test Acc: 0.280
+2025-10-21 19:21:34,056 | INFO | Epoch 11 | Train Loss: 1.9208 | Test Acc: 0.310
+2025-10-21 19:21:34,057 | INFO | Epoch 12 | Train Loss: 1.9278 | Test Acc: 0.280
+2025-10-21 19:21:34,057 | INFO | Epoch 13 | Train Loss: 1.9366 | Test Acc: 0.315
+2025-10-21 19:21:34,058 | INFO | Epoch 14 | Train Loss: 1.9171 | Test Acc: 0.227
+2025-10-21 19:21:34,058 | INFO | Epoch 15 | Train Loss: 1.9359 | Test Acc: 0.245
+2025-10-21 19:21:34,058 | INFO | Epoch 16 | Train Loss: 1.9204 | Test Acc: 0.294
+2025-10-21 19:21:34,059 | INFO | Epoch 17 | Train Loss: 1.9155 | Test Acc: 0.322
+2025-10-21 19:21:34,060 | INFO | Epoch 18 | Train Loss: 1.9282 | Test Acc: 0.336
+2025-10-21 19:21:34,060 | INFO | Epoch 19 | Train Loss: 1.9225 | Test Acc: 0.280
+2025-10-21 19:21:34,060 | INFO | Epoch 20 | Train Loss: 1.9103 | Test Acc: 0.289
+2025-10-21 19:21:34,060 | INFO | Epoch 21 | Train Loss: 1.9225 | Test Acc: 0.317
+2025-10-21 19:21:34,060 | INFO | Epoch 22 | Train Loss: 1.9235 | Test Acc: 0.296
+2025-10-21 19:21:34,060 | INFO | Epoch 23 | Train Loss: 1.8999 | Test Acc: 0.282
+2025-10-21 19:21:34,060 | INFO | Early stopping triggered at epoch 18.
+2025-10-21 19:21:34,060 | INFO | Training complete.
+
+2025-10-21 19:21:40,725 | INFO | Final Test Accuracy: 0.282
+
+2025-10-21 19:21:46,063 | INFO | Model saved to: .\src\logs\2025-10-21_19-04-48\crnn_model.pth
+
+2025-10-21 19:21:46,063 | INFO | Prediction Summary:
+2025-10-21 19:21:46,063 | INFO |   Label 1: 148 samples
+2025-10-21 19:21:46,063 | INFO |   Label 2: 32 samples
+2025-10-21 19:21:46,063 | INFO |   Label 4: 209 samples
+2025-10-21 19:21:46,063 | INFO |   Label 6: 41 samples
+2025-10-21 19:21:46,063 | INFO |   Label 7: 2 samples
+2025-10-21 19:21:46,092 | INFO | 
+Model Performance Metrics:
+2025-10-21 19:21:46,092 | INFO | accuracy       : 0.282
+2025-10-21 19:21:46,093 | INFO | precision      : 0.149
+2025-10-21 19:21:46,094 | INFO | recall         : 0.282
+2025-10-21 19:21:46,094 | INFO | f1             : 0.173
+2025-10-21 19:21:46,095 | INFO | model          : crnn
+2025-10-21 19:21:46,095 | INFO | feature_extraction: mfcc_lpc
+2025-10-21 19:21:46,095 | INFO | final_accuracy : 0.282
+2025-10-21 19:21:46,096 | INFO | epochs         : 50.000
+2025-10-21 19:21:46,096 | INFO | learning_rate  : 0.001
+2025-10-21 19:21:46,097 | INFO | batch_size     : 32.000
+2025-10-21 19:21:46,098 | INFO | weight_decay   : 0.050
+2025-10-21 19:21:46,098 | INFO | label_smoothing: 0.150
+2025-10-21 19:21:46,098 | INFO | dropout_rate   : 0.600
+2025-10-21 19:21:46,098 | INFO | best_epoch     : 18.000
+2025-10-21 19:21:46,098 | INFO | early_stopping : 1.000
+2025-10-21 19:21:46,100 | INFO | timestamp      : 2025-10-21_19-04-48
+2025-10-21 19:21:46,112 | INFO | 
+Metrics saved to: .\src\logs\2025-10-21_19-04-48\model_metrics.csv
+
+2025-10-21 19:21:46,112 | INFO | Generating classification report and confusion matrix...
+2025-10-21 19:21:54,370 | INFO | Confusion matrix saved to: .\src\logs\2025-10-21_19-04-48\crnn_confusion_matrix.png
+
+2025-10-21 19:21:54,370 | INFO | All tasks completed successfully!
+2025-10-21 19:21:54,370 | INFO | ================================================================================
