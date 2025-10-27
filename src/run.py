@@ -20,7 +20,7 @@ os.makedirs("../Data_preprocessing/preprocessed_mfccs", exist_ok=True)
 
 
 # Config (this is what you can change):
-model_name = "dnn" # options: "dnn", "lstm", "cnn", "crnn"
+model_name = "lstm" # options: "dnn", "lstm", "cnn", "crnn"
 feature_extraction = "mfcc" # options: "mfcc" or "mfcc_lpc"
 epochs = 50
 lr = 0.001
