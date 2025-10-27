@@ -78,6 +78,9 @@ In run.py you can find at the top a Config section with all the parameters which
 model_name = "cnn" # Options: "dnn", "lstm", "cnn", "crnn"
 feature_extraction = "mfcc" # Options: "mfcc" or "mfcc_lpc"
 ```
+## Project Information
+
+This project was developed as part of the course **Affective Computing** at the **University of Oulu** during Fall of 2025.
 
 ## Contributors
 - Sania Khan Tareen, Ece Merve Gelmez, Furkancan Özdemir, Iniyan Nachimuthu, Md Sayem Khandaker, Natalia Moreno Blasco.
