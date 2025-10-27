@@ -80,7 +80,7 @@ feature_extraction = "mfcc" # Options: "mfcc" or "mfcc_lpc"
 ```
 ## Project Information
 
-This project was developed as part of the course **Affective Computing** at the **University of Oulu** during Fall of 2025.
+This project was developed as part of the course **Affective Computing** at the **University of Oulu** during the Fall semester of 2025.
 
 ## Contributors
 - Sania Khan Tareen, Ece Merve Gelmez, Furkancan Özdemir, Iniyan Nachimuthu, Md Sayem Khandaker, Natalia Moreno Blasco.
