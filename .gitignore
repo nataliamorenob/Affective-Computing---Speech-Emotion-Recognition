@@ -4,4 +4,4 @@ Data_preprocessing/preprocees_mfccsLPC/
 Data_preprocessing/preprocessed_mfccs/
 results/
 __pycache__/
-Data/
+Data/.DS_Store
